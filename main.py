@@ -10,14 +10,32 @@ FONT_NAME = "Courier"
 WORK_MIN = 25
 SHORT_BREAK_MIN = 5
 LONG_BREAK_MIN = 20
+reps = 0
 
 # ----------------------- TIMER RESET --------------------- #
 
 # ----------------------- TIMER MECHANISM --------------------- #
 # create a timer function to use when start button is clicked
 def start_timer():
-    # call countdown function with time input as seconds
-    count_down(300)
+    global reps
+    reps += 1
+
+    work_seconds = WORK_MIN * 60
+    short_break_seconds = SHORT_BREAK_MIN * 60
+    long_break_seconds = LONG_BREAK_MIN * 60
+
+    # long break countdown if 8th/16th/24th/32th... reps
+    if reps % 8 == 0:
+        count_down(long_break_seconds)
+        title_label.config(text="BREAK", fg=RED)
+    # short break countdown if 2nd/4th/6th/10th/... reps
+    elif reps % 2 == 0:
+        count_down(short_break_seconds)
+        title_label.config(text="BREAK", fg=PINK)
+    # work countdown if 1st/3rd/5th/7th... reps
+    else:
+        count_down(work_seconds)
+        title_label.config(text="WORK", fg=GREEN)
 
 # ----------------------- COUNTDOWN MECHANISM --------------------- #
 # create a countdown function to change timer_text
@@ -30,8 +48,12 @@ def count_down(count):
         count_seconds = f"0{count_seconds}"
 
     canvas.itemconfig(timer_text, text=f"{count_minute}:{count_seconds}")
+    # start countdown with rep 1
     if count > 0:
         window.after(1000, count_down, count - 1)
+    # start countdown with rep +1 when countdown reaches 00:00
+    else:
+        start_timer()
 
 
 # ----------------------- UI SETUP --------------------- #
