@@ -25,16 +25,30 @@ window.title("Pomodoro")
 # set padding for window on x,y and set a background color
 window.config(padx=100, pady=50, bg=YELLOW)
 
+# create a label as Timer and set its position on grid
+title_label = Label(text="Timer", fg=GREEN, bg=YELLOW, font=(FONT_NAME, 50))
+title_label.grid(column=1, row=0)
+
 # create canvas, set a background color and remove white border with highlightthickness
 canvas = Canvas(width=200, height=224, bg=YELLOW, highlightthickness=0)
-# create a Photoimage with file path and save it to a variable
+# create a Photoimage with file path and save it in a variable
 tomato_img = PhotoImage(file="tomato.png")
 # use that in create_image method on canvas with pos x,y
 canvas.create_image(100, 112, image=tomato_img)
 # create text with pos x,y , text, fill color and font
 canvas.create_text(100, 130, text="00:00", fill="white", font=(FONT_NAME, 35, "bold"))
+# set canvas position on grid
+canvas.grid(column=1, row=1)
 
-# show canvas in window
-canvas.pack()
+# create a start button and set its position on grid
+start_button = Button(text="Start", highlightthickness=0)
+start_button.grid(column=0, row=2)
+# create a reset button and set its position on grid
+reset_button = Button(text="Reset", highlightthickness=0)
+reset_button.grid(column=2, row=2)
+
+# create checkmark and set its position on grid
+check_marks = Label(text="✔", fg=GREEN, bg=YELLOW)
+check_marks.grid(column=1, row=3)
 
 window.mainloop()
