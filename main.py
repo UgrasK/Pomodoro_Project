@@ -11,8 +11,16 @@ WORK_MIN = 25
 SHORT_BREAK_MIN = 5
 LONG_BREAK_MIN = 20
 reps = 0
+timer = None
 
 # ----------------------- TIMER RESET --------------------- #
+def reset_timer():
+    window.after_cancel(timer)
+    canvas.itemconfig(timer_text, text="00:00")
+    title_label.config(text="Timer")
+    check_marks.config(text="")
+    global reps
+    reps = 0
 
 # ----------------------- TIMER MECHANISM --------------------- #
 # create a timer function to use when start button is clicked
@@ -50,10 +58,18 @@ def count_down(count):
     canvas.itemconfig(timer_text, text=f"{count_minute}:{count_seconds}")
     # start countdown with rep 1
     if count > 0:
-        window.after(1000, count_down, count - 1)
+        global timer
+        timer = window.after(1000, count_down, count - 1)
     # start countdown with rep +1 when countdown reaches 00:00
     else:
         start_timer()
+        # add checkmark when finishing every work session
+        if reps % 2 == 0:
+            marks = ""
+            work_sessions = math.floor(reps/2)
+            for _ in work_sessions:
+                marks += "✔"
+            check_marks.config(text=marks)
 
 
 # ----------------------- UI SETUP --------------------- #
@@ -84,11 +100,11 @@ canvas.grid(column=1, row=1)
 start_button = Button(text="Start", highlightthickness=0, command=start_timer)
 start_button.grid(column=0, row=2)
 # create a reset button and set its position on grid
-reset_button = Button(text="Reset", highlightthickness=0)
+reset_button = Button(text="Reset", highlightthickness=0, command=reset_timer)
 reset_button.grid(column=2, row=2)
 
 # create checkmark and set its position on grid
-check_marks = Label(text="✔", fg=GREEN, bg=YELLOW)
+check_marks = Label(fg=GREEN, bg=YELLOW)
 check_marks.grid(column=1, row=3)
 
 window.mainloop()
